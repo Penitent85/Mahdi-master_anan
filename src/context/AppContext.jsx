@@ -13,9 +13,16 @@ const AppContextProvider = (props) => {
 
   const [doctors, setDoctors] = useState(null);
   const [token, setToken] = useState(null);
+  const [streamToken, setStreamToken] = useState()
   const [userData, setUserData] = useState(null);
+  const [user1Data, setUser1Data] = useState(null);
+  const [user2Data, setUser2Data] = useState(null);
+  const [notifications, setNotifications] = useState(0)
+
+
   const [doctor, setDoctor] = useState(null);
   const [userId, setUserId] = useState(null);
+
   useEffect(() => {
     setToken(localStorage.getItem("token"));
 
@@ -49,6 +56,7 @@ const AppContextProvider = (props) => {
           "ngrok-skip-browser-warning": "sss",
         },
       });
+       console.log( 'getDoctore data' , data)
 
       if (data) {
         setDoctor(data.data);
@@ -57,6 +65,82 @@ const AppContextProvider = (props) => {
       console.log(error);
     }
   };
+
+  const getUser1 = async (id) => {
+    try {
+      const { data } = await axios.get(backendUrl + `api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (data) {
+        setUser1Data(data)
+        console.log('data-----', data)
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getUser2 = async (id) => {
+    try {
+      const { data } = await axios.get(backendUrl + `api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      if (data) {
+        setUser2Data(data)
+        console.log('data-----', data)
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+    const getNotifications = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:5173/api/notification/32', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    if (data) {
+
+        setNotifications(data)
+
+       }
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+    const getStreamToken = async (id) => {
+    try {
+      const { data } = await axios.get(`http://localhost:5173/api/token/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+        })
+
+        if (data) {
+        setStreamToken(data)
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+    };
+
+
+
+
+
 
   // Getting User Profile using API
   const loadUserProfileData = async () => {
@@ -86,15 +170,28 @@ const AppContextProvider = (props) => {
     getDoctosData,
     currencySymbol,
     backendUrl,
-    token,
     setToken,
-    userData,
-    setUserData,
     loadUserProfileData,
     userId,
     setUserId,
     getDoctor,
+    setUser2Data,
+    setUser1Data,
+    user1Data,
+    user2Data,
     doctor,
+    userData,
+    setUserData,
+    getUser2,
+    getUser1,
+    notifications,
+    setNotifications,
+    getNotifications,
+
+    token,
+    streamToken,
+    getStreamToken,
+
   };
 
   return (

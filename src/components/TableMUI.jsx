@@ -29,6 +29,7 @@ export default function StickyHeadTable() {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [searchQuery, setSearchQuery] = React.useState("");
     const { doctors, getDoctosData } = useContext(AppContext);
+    const [isActive, setIsActive] = useState(false)
 
 
 
@@ -51,7 +52,7 @@ export default function StickyHeadTable() {
 
     const handleActive = async (id, isActive) => {
         const data = {
-            is_active: !isActive,
+            is_active : !isActive
         };
        if(doctors)
         await axios.put('http://localhost:8000/'+`api/doctors/${id}`, data);
@@ -60,8 +61,9 @@ export default function StickyHeadTable() {
     useEffect(() => {
         getDoctosData();
 
-    }, [handleActive()]);
+    }, []);
 
+    // handleActive()
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>

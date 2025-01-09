@@ -13,13 +13,20 @@ body {
 }
 
 .str-chat__channel-list {
+    /*background: yellow;*/
+    /*height: fit-content;*/
+    display: none;
     width: 100%;
 }
 
 .str-chat__channel {
+    /*background: red;*/
+    height: 500px;
     width: 100%;
 }
 
 .str-chat__thread {
+    background: green;
     width: 100%;
+    height: 500px;
 }

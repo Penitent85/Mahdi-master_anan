@@ -10,6 +10,10 @@ import mage from "@/assets/123.jpg";
 import Image from "next/image";
 import { dateFormate } from "../../../utils/fun";
 import Link from "next/link";
+import { CiVideoOn } from "react-icons/ci";
+import { FaRegMessage } from "react-icons/fa6";
+
+
 
 const MyAppointments = () => {
   const { backendUrl, token } = useContext(AppContext);
@@ -193,13 +197,32 @@ console.log(data.data);
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end text-sm text-center">
-              <Link
-                  href={`/table/${item.doctor.user.id}`}
+              <div   className="sm:min-w-48 py-1  border rounded ">
+                <Link
+                    // href={`/chat/${item.doctor.user.id}`}
+                    href={`/chat/${item.doctor.user.id}`}
+                >
+                  <button type="button"
+                          className="  focus:outline-none text-white text-xl bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg  px-5 py-2.5 me-2  dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                    <FaRegMessage/>
+                  </button>
 
-                  className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-green-600 hover:text-white transition-all duration-300"
-              >
-                 Send Meassage
-              </Link>
+                </Link>
+                <Link
+                    // href={`/chat/${item.doctor.user.id}`}
+                    href={`/video`}
+                >
+                  <button type="button"
+                          className="  text-white text-xl bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg  px-5 py-2.5 me-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                    <CiVideoOn/>
+
+                  </button>
+
+                </Link>
+
+              </div>
+
+
               {!item.cancelled &&
                   !item.payment &&
                   !item.isCompleted &&

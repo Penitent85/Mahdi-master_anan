@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AppContext } from "../context/AppContext";
 import Image from "next/image";
@@ -7,12 +7,14 @@ import { assets } from "../assets/assets";
 import Link from "next/link";
 import { DoctorContext } from "../context/DoctorContext";
 import { AdminContext } from "../context/AdminContext";
+import { FaBell } from "react-icons/fa";
+
 const Navbar = () => {
   const router = useRouter();
   const path = usePathname();
 
   const [showMenu, setShowMenu] = useState(false);
-  const { token, setToken, userData } = useContext(AppContext);
+  const { token, setToken, userData  , notifications } = useContext(AppContext);
   const { dToken, setDToken } = useContext(DoctorContext);
   const { aToken, setAToken } = useContext(AdminContext);
 
@@ -37,6 +39,13 @@ const Navbar = () => {
 
     return dynamicPathRegex.test(path);
   };
+
+
+  useEffect(() => {
+
+
+
+  }, [notifications]);
 
   const logout = () => {
     if (token) {
@@ -77,35 +86,49 @@ const Navbar = () => {
             HOME
           </Link>
           <hr
-            className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden`}
+              className={`border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden`}
           />
         </li>
         <li className={`${path === "/doctors" ? "active" : ""}`}>
           <Link href="/doctors" className="py-1">
             ALL DOCTORS
           </Link>
-          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
+          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden"/>
         </li>
         <li className={`${path === "/about" ? "active" : ""}`}>
           <Link href="/about" className="py-1">
             ABOUT
           </Link>
-          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
+          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden"/>
         </li>
         <li className={`${path === "/CONTACT" ? "active" : ""}`}>
           <Link href="/contact" className="py-1">
             CONTACT
           </Link>
-          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
+          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden"/>
         </li>
+
+        <li className={`${path === "/CONTACT" ? "active" : ""}`}>
+          <Link href="/contact" className="py-1">
+            {
+
+
+               notifications > 0 ?  <FaBell className='text-red-600 text-xl'/> :  <FaBell />
+
+            }
+          </Link>
+          <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden"/>
+        </li>
+
+
       </ul>
 
       <div className="flex items-center gap-4 ">
         {token ? (
-          <div className="flex items-center gap-2 cursor-pointer group relative">
-            <Image
-              className="w-8 rounded-full"
-              src={assets.profile_pic}
+            <div className="flex items-center gap-2 cursor-pointer group relative">
+              <Image
+                  className="w-8 rounded-full"
+                  src={assets.profile_pic}
               alt=""
             />
             <Image

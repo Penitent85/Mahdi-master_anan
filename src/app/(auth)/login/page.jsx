@@ -97,7 +97,6 @@ console.log(data.user.role_id);
           localStorage.setItem("token", data.token);
           setUserId(data.user.id);
           localStorage.setItem("userId", data.user.id)
-
         }
       }
     } catch (error) {
