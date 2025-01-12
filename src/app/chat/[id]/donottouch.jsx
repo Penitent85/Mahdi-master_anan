@@ -28,7 +28,6 @@ const Page = () => {
     useContext(AppContext);
   const [userName1, setUserName1] = useState("");
   const [userName2, setUserName2] = useState("");
-  const [error, setError] = useState(false);
   const [user1, setUser1] = useState({});
   const [user2, setUser2] = useState({});
   const client = StreamChat.getInstance(apiKey);
@@ -49,32 +48,22 @@ const Page = () => {
     // for doctor
     if (id) {
       const data = getUser1(id);
-      data
-        .then((res) => {
-          setUser1(res.data);
-        })
-        .catch((err) => {
-          setError(true);
-          return;
-        });
+      data.then((res) => {
+        setUser1(res.data);
+      });
       if (user1) setUserName1(user1.first_name + " " + user1.last_name);
     }
     // for user
     if (userId) {
       const data = getUser1(userId);
-      data
-        .then((res) => {
-          setUser2(res.data);
-        })
-        .catch((err) => {
-          setError(true);
-          return;
-        });
+      data.then((res) => {
+        setUser2(res.data);
+      });
       if (user2) setUserName2(user2.first_name + " " + user2.last_name);
     }
+  }, [userId, id, userName1, userName2, streamToken]);
 
-    if (error) return;
-    console.log("1111111111");
+  useEffect(() => {
     if (client.userID) return;
     if (!userId) {
       toast.error("Please login to continue");
@@ -116,15 +105,15 @@ const Page = () => {
 
     setupClient();
   }, [
-    userName1,
-    userName2,
-    streamToken,
     client,
     isClientReady,
     id,
     router,
     userId,
-  ]);
+    streamToken,
+    userName1,
+    userName2,
+  ]); //
 
   if (client)
     if (id === userId) {
@@ -140,21 +129,14 @@ const Page = () => {
         </div>
       );
     }
- 
-
- 
+  console.log(client);
 
   if (!isClientReady) return <div>Setting up client & connection...</div>;
 
   return (
     <div>
-      <Chat client={client}>
-        <ChannelList
-          filters={filters}
-          sort={sort}
-          options={options}
-          List={ChannelList} 
-        />
+      <Chat client={client} key={client.activeChannels.id}>
+        <ChannelList filters={filters} sort={sort} options={options} />
         <Channel>
           <Window>
             <ChannelHeader />
@@ -170,4 +152,5 @@ const Page = () => {
 
 export default Page;
 
- 
+
+

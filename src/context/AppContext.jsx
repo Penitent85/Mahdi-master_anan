@@ -2,8 +2,9 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import {getItemFromLocalStorage} from "../../utils/localstorage";
 
-export const AppContext = createContext();
+export const AppContext = createContext(undefined);
 
 const AppContextProvider = (props) => {
   const currencySymbol = "$";
@@ -24,9 +25,15 @@ const AppContextProvider = (props) => {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
-
-    setUserId(localStorage.getItem("userId"));
+    try {
+      // setToken(localStorage.getItem("token"));
+      setToken(getItemFromLocalStorage("token"));
+      // setUserId(localStorage.getItem("userId"));
+      setUserId(getItemFromLocalStorage("userId"));
+    }
+    catch (error) {
+      console.log(error);
+    }
   }, [setToken, token]);
 
   // Getting Doctors using API
@@ -75,11 +82,12 @@ const AppContextProvider = (props) => {
       })
       if (data) {
         setUser1Data(data)
-        console.log('data-----', data)
+        // console.log('data---all--', data)
+        return data;
       }
-
     } catch (error) {
-      console.log(error);
+      toast.error('User not found');
+      // console.log(error);
     }
   };
 
@@ -92,10 +100,11 @@ const AppContextProvider = (props) => {
       })
       if (data) {
         setUser2Data(data)
-        console.log('data-----', data)
+        console.log('data---2--', data)
       }
 
     } catch (error) {
+      toast.error('User not found');
       console.log(error);
     }
   };
@@ -187,7 +196,6 @@ const AppContextProvider = (props) => {
     notifications,
     setNotifications,
     getNotifications,
-
     token,
     streamToken,
     getStreamToken,

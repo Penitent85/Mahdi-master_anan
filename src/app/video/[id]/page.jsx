@@ -1,182 +1,114 @@
 'use client'
-import React, {useContext, useEffect, useState} from "react";
 import {
     CallControls,
-    CallingState, ParticipantView,
-    SpeakerLayout,
-    StreamCall,
-    StreamTheme,
+    CallingState,
+    ParticipantView, SpeakerLayout,
+    StreamCall, StreamTheme,
     StreamVideo,
-    StreamVideoClient, useCall,
-    useCallStateHooks,
-    User,
-} from "@stream-io/video-react-sdk";
+    StreamVideoClient,
+    useCall,
+    useCallStateHooks
+} from '@stream-io/video-react-sdk';
 
+const apiKey = 'mmhfdzb5evj2';
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL0xhbmRvX0NhbHJpc3NpYW4iLCJ1c2VyX2lkIjoiTGFuZG9fQ2Fscmlzc2lhbiIsInZhbGlkaXR5X2luX3NlY29uZHMiOjYwNDgwMCwiaWF0IjoxNzM2NjI0NjkxLCJleHAiOjE3MzcyMjk0OTF9.kY_pjnpK_By5cIjZfubvP34PVGBa49fxvODs6kcStVM';
+const userId = 'Lando_Calrissian';
+const callId = 'tLOUbWD3qXMK';
+import "@stream-io/video-react-sdk/dist/css/styles.css"
 
-import "@stream-io/video-react-sdk/dist/css/styles.css";
-import "./layout.css";
-import {useParams} from "next/navigation";
-import {AppContext} from "@/context/AppContext";
+// set up the user object
+const user   = {
+    id: userId,
+    name: 'stevan',
+    image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
+};
 
-import {error} from "next/dist/build/output/log";
-
-
-
-
-
-
-
-
-
-
-
-export default function App() {
-    const {streamToken, getStreamToken} = useContext(AppContext)
-    const [isClientReady, setIsClientReady] = useState(false);
-    // const  {id} = useParams();
-    const id = "32";
-    const apiKey = process.env.NEXT_PUBLIC_GETSTREAM_API_KEY;
-    const user = {
-        id :id,
-        name: "Karam",
-        image: "https://getstream.io/random_svg/?id=mahdi&name=Mahdi",
-    };
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzIifQ.KQSZz3f1bTQxvcxFrbb0hj2cFUadSRMNtRQkmgXz2cs";
-    const client = new StreamVideoClient({apiKey, user, token  });
-    const callId = "0000";
-    const call = client.call("default", callId);
-    // const userId = "32";
-    call.join({ create: true });
-
-    useEffect(() => {
-
-        // if(!streamToken) getStreamToken(id);
-        // console.log( 'Steam Token',streamToken )
-
-        async function setupClient() {
-          try {
-              // if (!streamToken) return;
-
-              // console.log( 'Steam Token',streamToken )
-
-                  console.log( 'client',client )
-                  if(client) {
-                      await client.disconnectUser(1000);
-                  }
+const client = new StreamVideoClient({ apiKey, user, token });
+const call = client.call('default', callId);
+call.join({ create: true });
 
 
 
-
-              call.join({ create: true });
-              setIsClientReady(true);
-            
-          }
-          catch (e) {
-              console.error(e);
-
-          }
-        }
-        setupClient();
-
-    },[streamToken] )
-
-
-
-    if(!isClientReady) return <div>Setting up client & connection...</div>;
-
+export default function  App ()   {
     return (
-        <StreamVideo client={client}>
-            <StreamCall call={call}>
-                <MyUILayout />
-            </StreamCall>
-        </StreamVideo>
-    );
-}
+       <div className='bg-[#272a30]'>
+           <StreamVideo client={client}>
+               <StreamCall call={call}>
+                   <MyUILayout />
+               </StreamCall>
+           </StreamVideo>
 
-
-export  const  MyParticipantList = ({ participants }) => {
-    return (
-        <div
-        style={
-            {
-                display: "flex",
-                fxDirection: "row",
-                gap: "8px",
-                width: "100vw",
-            }
-        }
-        >
-            {
-                participants.map((participant,index) => (
-                  <div key={index} style={{
-                      width: "100%",
-                      aspectRatio: "3/2",
-                  }}>
-                      <ParticipantView
-                      muteAudio
-                      participant={participant}
-                      // key={participant.sessionID}
-                      />
-
-                  </div>
-                ))
-            }
-        </div>
+       </div>
     );
 };
 
-export const MyFloatingLocalParticipant = ({participant}) => {
-    return (
-        <div
-        style={{
-            // note here
-            position: "absolute",
-            top: "16px",
-            left: "16px",
-            width: "240px",
-            height: "135px",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-            borderRadius: "12px",
-        }}
-        >
-            {/*<ParticipantView*/}
-            {/*participant={participant}*/}
-            {/*/>*/}
-            {
-                participant && <ParticipantView muteAudio participant={participant} />
-            }
-        </div>
-    )
 
-}
 
 export const MyUILayout = () => {
-    const call = useCall();
-    const  { useCallCallingState     }  = useCallStateHooks()
-    const callingState = useCallCallingState();
 
+    const { useCallCallingState, useParticipantCount , useLocalParticipant , useRemoteParticipants } = useCallStateHooks();
+    const callingState = useCallCallingState();
+    const participantCount = useParticipantCount();
+    const localParticipant  = useLocalParticipant();
+    const remoteParticipants = useRemoteParticipants();
 
     if (callingState !== CallingState.JOINED) {
         return <div>Loading...</div>;
     }
 
-
     return (
+        <div>
+            <StreamTheme>
+                <SpeakerLayout participantsBarPosition='bottom' />
+                <CallControls onLeave={()=>console.log( '<Ajdi' )}  />
 
-
-          <StreamTheme
-          style={{
-              position: "relative",
-          }}
-          >
-              <SpeakerLayout participantsBarPosition='bottom' />
-              <CallControls />
-
-          </StreamTheme>
-
+            </StreamTheme>
+        </div>
     );
 };
 
+export const MyParticipantList = () => {
+    const call = useCall();
+    const participants = call.participants;
 
+    return (
+        <div className={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '8px',
+            width: '100vw',
+        }}>
+            {participants.map((participant) => (
+                <div
+                    style={{
+                        padding: '8px',
+                        borderRadius: '8px',
+                        backgroundColor: '#f0f0f0',
+                        aspectRatio: '3/2',
+                    }}
+                    key={participant.user.id}>
+                    {participant.user.name}
+                </div>
+            ))}
+        </div>
+    );
+};
 
+export const MyFloatingLocalParticipant = ({partisipant}) => {
 
+    return (
+        <div
+            style={{
+                position: 'absolute',
+                bottom: '16px',
+                right: '16px',
+                padding: '8px',
+                borderRadius: '8px',
+                backgroundColor: '#f0f0f0',
+            }}>
+            {
+                partisipant && <ParticipantView participant={partisipant} />
+            }
+        </div>
+    );
+}

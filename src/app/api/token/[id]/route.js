@@ -9,10 +9,14 @@ export async function GET(request , params) {
 
     const a = request.url.split('http://localhost:5173/api/token/')
       const user =a[1];
+
+    console.log( typeof user)
+    console.log( 'user',user)
     try {
 
         const serverClient = StreamChat.getInstance(apiKey, apiSecret);
         const token = serverClient.createToken(user);
+        console.log( 'token',token )
         return NextResponse.json(token, { status: 200 });
 
 
